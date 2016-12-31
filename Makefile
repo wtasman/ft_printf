@@ -6,7 +6,7 @@
 #    By: wasman <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/22 23:22:35 by wasman            #+#    #+#              #
-#    Updated: 2016/11/22 23:22:39 by wasman           ###   ########.fr        #
+#    Updated: 2016/12/30 23:26:22 by wasman           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME = libftprintf.a
 BLDLIB = ar rc
 SORT = ranlib
 
-SOURCES =	ft_printf.h\
+SOURCES =	ft_printf.c\
 
 
 OBJ =	$(SOURCES:.c=.o)
