@@ -6,7 +6,7 @@
 /*   By: wasman <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/22 23:31:07 by wasman            #+#    #+#             */
-/*   Updated: 2016/12/30 22:27:41 by wasman           ###   ########.fr       */
+/*   Updated: 2017/01/02 08:52:14 by wasman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "ft_printf.h"
@@ -81,7 +81,7 @@ int ft_printf(const char *format, ...)
 	return (len);
 }
 
-int main(void)
+/*int main(void)
 {
 	int len;
 	int mylen;
@@ -92,4 +92,4 @@ int main(void)
 	mylen = ft_printf("%    %Trrey\n");
 	printf("len = %i\nmylen = %i\n", len, mylen);
 	return(0);
-}
+}*/
