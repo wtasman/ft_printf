@@ -6,7 +6,7 @@
 /*   By: wasman <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/09/21 09:25:16 by wasman            #+#    #+#             */
-/*   Updated: 2016/11/22 15:59:38 by wasman           ###   ########.fr       */
+/*   Updated: 2017/01/02 16:24:31 by wasman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ int					ft_isupper(int c);
 int					ft_islower(int c);
 t_list				*ft_sort_list(t_list* lst, int (*cmp)(void *, void *));
 int					get_next_line(int fd, char **line);
+char				*ft_itoa_base(int value, int base);
 
 #endif
