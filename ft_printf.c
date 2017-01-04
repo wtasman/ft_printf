@@ -6,7 +6,7 @@
 /*   By: wasman <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/22 23:31:07 by wasman            #+#    #+#             */
-/*   Updated: 2017/01/02 22:30:19 by wasman           ###   ########.fr       */
+/*   Updated: 2017/01/04 13:36:37 by wasman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "ft_printf.h"
@@ -43,7 +43,7 @@ int	s_spec(va_list a_list)
 	char	*str;
 
 	len = 0;
-	str = va_arg(a_list, char *);
+	str = va_arg(a_list, void *);
 	while (str[len])
 	{
 		write(1, &str[len], 1);
@@ -83,6 +83,21 @@ int u_spec(va_list a_list)
 	return(len);
 }
 
+int	p_spec(va_list a_list)
+{
+	int		len;
+	int		addr;
+	char	*str;
+
+	len = 0;
+	addr = (int)va_arg(a_list, void *);
+	str = ft_itoa_base(addr, 16);
+	ft_putstr("0x10");
+	ft_putstr(str);
+	len = (ft_strlen(str) + 4);
+	return (len);
+}
+
 int space_flag(char **ptr)
 {
 	int len;
@@ -97,18 +112,20 @@ int space_flag(char **ptr)
 
 void	store_type(char **ptr,int *len, va_list a_list)
 {
-	if (*ptr && **ptr == 's')
+	if (*ptr && (**ptr == 's'))
 		*len += s_spec(a_list);
-	else if (*ptr && **ptr == 'c')
-		*len += c_spec(a_list);
-	else if (*ptr && **ptr == 'u')
-		*len += u_spec(a_list);
-	else if (*ptr && (**ptr == 'i' || **ptr == 'd'))
+	else if (*ptr && **ptr == 'p')
+		*len += p_spec(a_list);
+	else if (*ptr && (**ptr == 'd' || **ptr == 'i'))
 		*len += number_spec(a_list, 10);
 	else if (*ptr && **ptr == 'o')
 		*len += number_spec(a_list, 8);
+	else if (*ptr && **ptr == 'u')
+		*len += u_spec(a_list);
 	else if (*ptr && **ptr == 'x')
 		*len += number_spec(a_list, 16);
+	else if (*ptr && **ptr == 'c')
+		*len += c_spec(a_list);
 	else if (*ptr && **ptr == '%')
 		*len += double_percent();
 }
@@ -153,7 +170,7 @@ int ft_printf(const char *format, ...)
 	return (len);
 }
 
-int main(void)
+/*int main(void)
 {
 	int len;
 	int mylen;
@@ -162,8 +179,8 @@ int main(void)
 	ft = 42;
 	len = 0;
 	mylen = 0;
-	len = printf("%o%s knows his %s%u%c", ft, "Torrey", "stuff", 4294967295, '\n');
-	mylen = ft_printf("%o%s knows his %s%u%c", ft, "Torrey", "stuff", -1, '\n');
+	len = printf("%o%p knows his %s%c", ft, "Torrey", "stuff", '\n');
+	mylen = ft_printf("%o%p knows his %s%c", ft, "Torrey", "stuff", '\n');
 	printf("len = %i\nmylen = %i\n", len, mylen);
 	return(0);
-}
+}*/
