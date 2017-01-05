@@ -6,20 +6,16 @@
 /*   By: wasman <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/22 23:22:16 by wasman            #+#    #+#             */
-/*   Updated: 2016/12/30 22:28:49 by wasman           ###   ########.fr       */
+/*   Updated: 2017/01/04 18:35:30 by wasman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
-# include "libft/libft.h"
-# include "stdarg.h"
-
-struct type_list
-{
-	char	*character;
-}	type;
+# include <stdlib.h>
+# include <unistd.h>
+# include <stdarg.h>
 
 struct b_list
 {
@@ -37,5 +33,9 @@ struct b_list
 }	flags;
 
 int		ft_printf(const char *format, ...);
+char	*ft_itoa_base(int value, int base);
+size_t		ft_strlen(const char *);
+void	ft_putstr(const char *);
+void	ft_putchar(char c);
 
 #endif

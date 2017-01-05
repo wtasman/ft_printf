@@ -6,7 +6,7 @@
 /*   By: wasman <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/22 23:31:07 by wasman            #+#    #+#             */
-/*   Updated: 2017/01/04 13:36:37 by wasman           ###   ########.fr       */
+/*   Updated: 2017/01/04 16:58:02 by wasman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "ft_printf.h"
@@ -49,8 +49,7 @@ int	s_spec(va_list a_list)
 		write(1, &str[len], 1);
 		len++;
 	}
-	return (len);
-	
+	return (len);	
 }
 
 int	c_spec(va_list a_list)
