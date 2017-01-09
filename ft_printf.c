@@ -6,7 +6,7 @@
 /*   By: wasman <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/22 23:31:07 by wasman            #+#    #+#             */
-/*   Updated: 2017/01/09 10:05:17 by wasman           ###   ########.fr       */
+/*   Updated: 2017/01/09 14:59:55 by wasman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include "ft_printf.h"
@@ -232,6 +232,8 @@ int ft_printf(const char *format, ...)
 	}
 	return (len);
 }
+
+//comment for git repo
 
 int main(void)
 {
