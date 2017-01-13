@@ -19,11 +19,12 @@
 
 typedef struct s_list
 {
+	int width;
 	int	hash;
 	int	zero;
 	int	dash;
 	int	plus;
-	int spac;
+	int space;
 	int	hh;
 	int h;
 	int l;
@@ -37,5 +38,6 @@ char		*ft_itoa_base(int value, int base);
 size_t		ft_strlen(const char *);
 void		ft_putstr(const char *);
 void		ft_putchar(char c);
+int			ft_isdigit(int c);
 
 #endif

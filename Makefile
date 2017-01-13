@@ -21,7 +21,8 @@ SOURCES =	ft_printf.c\
 			ft_itoa_base.c\
 			ft_strlen.c\
 			ft_putstr.c\
-			ft_putchar.c
+			ft_putchar.c\
+			ft_isdigit.c
 
 OBJ =	$(SOURCES:.c=.o)
 
