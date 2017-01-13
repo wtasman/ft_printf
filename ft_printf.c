@@ -165,21 +165,31 @@ int o_spec(va_list a_list, char **ptr, f_list *flags)
 
 int d_spec(va_list a_list, char **ptr, f_list *flags)
 {
-	int		len;
-	int		i;
-	char	*str;
+	int				len;
+	long long		temp;
+	int				i;
+	char			*str;
 
 	len = 0;
 	i = 0;
-	if (flags && flags->space == 1)
-	{
-		len++;
-		write(1, " ", 1);
-	}
 	if (**ptr && is_cap(ptr) == 0)
-		str = ft_itoa_base(va_arg(a_list, int), 10);
+	{
+		temp = (int)va_arg(a_list, int);
+		str = ft_itoa_base(temp, 10);
+	}
 	else 
-		str = ft_itoa_base(va_arg(a_list,long int), 10);
+	{
+		temp = (long int)va_arg(a_list, long int);
+		str = ft_itoa_base(temp, 10);
+	}
+	if (temp > 0)
+	{
+		if (flags && flags->space == 1)
+		{
+			len++;
+			write(1, " ", 1);
+		}
+	}
 	while (str[i])
 	{
 		write(1, &str[i], 1);
@@ -261,8 +271,10 @@ void	flag_check(char **ptr, f_list *flags)
 		flags->dash = 1;
 	else if (*ptr && **ptr == '+')
 		flags->plus = 1;
-	else if (**ptr == ' ')
+	else if (*ptr && **ptr == ' ')
+	{
 		flags->space = 1;
+	}
 }
 
 /*int		length_check(char **ptr, f_list flags)
@@ -336,7 +348,7 @@ int	print_final_format(va_list a_list, const char *format)
 int ft_printf(const char *format, ...)
 {
 	va_list a_list;
-	int len;
+	int		len;
 
 	len =0;
 	if (format)
@@ -354,7 +366,7 @@ int	main(void)
 	int mylen;
 	int ft;
 
-	ft = 42;
+	ft = -42;
 	len = 0;
 	mylen = 0;
 	len = printf("% d%s knows his %s%c", ft, "Torrey", "stuff", '\n');
