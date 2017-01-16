@@ -107,10 +107,10 @@ int u_spec(va_list a_list, char **ptr)
 	char	*str;
 
 	len = 0;
-	if (**ptr && is_cap(ptr) == 0)
-		value = va_arg(a_list, int);
+	if (**ptr && is_cap(ptr))
+		value = va_arg(a_list, unsigned long int);
 	else 
-		value = va_arg(a_list, long int);
+		value = va_arg(a_list, unsigned int);
 	str = ft_itoa_base(value, 10);
 	while (str[len])
 	{
@@ -138,27 +138,37 @@ int	p_spec(va_list a_list)
 int o_spec(va_list a_list, char **ptr, f_list *flags)
 {
 	int		len;
+	int		i;
 	char	*str;
+	unsigned int temp;
 
 	len = 0;
+	i = 0;
+	if (**ptr && is_cap(ptr) == 0)
+	{
+		temp = va_arg(a_list, int);
+		str = ft_itoa_base(temp, 8);
+	}
+	else 
+	{
+		temp = va_arg(a_list, long int);
+		str = ft_itoa_base(temp, 8);
+	}
 	if (flags && flags->hash)
 	{
 		write(1, "0", 1);
 		len++;
 	}
-	if (flags && flags->space)
+	if (flags && flags->space && !flags->plus)
 	{
 		write(1, " ", 1);
 		len++;
 	}
-	if (**ptr && is_cap(ptr) == 0)
-		str = ft_itoa_base(va_arg(a_list, int), 8);
-	else 
-		str = ft_itoa_base(va_arg(a_list,long int), 8);
-	while (str[len])
+	while (str[i])
 	{
-		write(1, &str[len], 1);
-		len++;
+		len += i;
+		write(1, &str[i], 1);
+		i++;
 	}
 	return (len);
 }
@@ -184,10 +194,15 @@ int d_spec(va_list a_list, char **ptr, f_list *flags)
 	}
 	if (temp > 0)
 	{
-		if (flags && flags->space == 1)
+		if (flags && flags->space && !flags->plus)
 		{
 			len++;
 			write(1, " ", 1);
+		}
+		if (flags && flags->plus)
+		{
+			len++;
+			write(1, "+", 1);
 		}
 	}
 	while (str[i])
@@ -202,22 +217,30 @@ int d_spec(va_list a_list, char **ptr, f_list *flags)
 int x_spec(va_list a_list, char **ptr, f_list *flags)
 {
 	int		len;
+	int		i;
 	char	*str;
 
 	len = 0;
-	if (flags && flags->space)
+	i = 0;
+	if (**ptr && is_cap(ptr))
+		str = ft_itoa_base(va_arg(a_list, long int), 16);
+	else 
+		str = ft_itoa_base(va_arg(a_list, int), 16);
+	if (flags && flags->space && !flags->plus)
 	{
 		write(1, " ", 1);
 		len++;
 	}
-	if (**ptr && is_cap(ptr) == 0)
-		str = ft_itoa_base(va_arg(a_list, int), 16);
-	else 
-		str = ft_itoa_base(va_arg(a_list,long int), 16);
-	while (str[len])
+	if (flags && flags->hash)
 	{
-		write(1, &str[len], 1);
-		len++;
+		write(1, "0x", 2);
+		len += 2;
+	}
+	while (str[i])
+	{
+		write(1, &str[i], 1);
+		len += i;
+		i++;
 	}
 	return (len);
 }
@@ -272,9 +295,7 @@ void	flag_check(char **ptr, f_list *flags)
 	else if (*ptr && **ptr == '+')
 		flags->plus = 1;
 	else if (*ptr && **ptr == ' ')
-	{
 		flags->space = 1;
-	}
 }
 
 /*int		length_check(char **ptr, f_list flags)
@@ -328,7 +349,7 @@ int	print_final_format(va_list a_list, const char *format)
 		if (*ptr && *ptr == '%')
 		{
 			ptr++;
-			if (*ptr && !is_spec(*ptr))
+			while (*ptr && !is_spec(*ptr))
 			{
 				if (!is_flag(*ptr) && !is_length(*ptr))
 					return (-1);
@@ -338,10 +359,15 @@ int	print_final_format(va_list a_list, const char *format)
 					ptr++;
 				}
 			}
-			store_type(&ptr, &len, a_list, flags);
+			if (*ptr && is_spec(*ptr))
+				store_type(&ptr, &len, a_list, flags);
+			else 
+				return (-1);
 		}
 		ptr++;
+		ft_init_flags();
 	}
+	free(flags);
 	return (len);
 }
 
@@ -366,11 +392,11 @@ int	main(void)
 	int mylen;
 	int ft;
 
-	ft = -42;
+	ft = 1040;
 	len = 0;
 	mylen = 0;
-	len = printf("% d%s knows his %s%c", ft, "Torrey", "stuff", '\n');
-	mylen = ft_printf("% d%s knows his %s%c", ft, "Torrey", "stuff", '\n');
+	len = printf("%o%s knows his %s%03c", ft, "Torrey", "stuff", '\n');
+	mylen = ft_printf("%o%s knows his %s%c", ft, "Torrey", "stuff", '\n');
 	printf("len = %i\nmylen = %i\n", len, mylen);
 	return(0);
 }
