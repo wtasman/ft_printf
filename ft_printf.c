@@ -386,16 +386,20 @@ int ft_printf(const char *format, ...)
 	return (len);
 }
 
+#include <locale.h>
+
 int	main(void)
 {
+	setlocale(LC_ALL, "");
 	int len;
 	int mylen;
+	wchar_t str[] = L"0x1F479";
 	int ft;
 
-	ft = 1040;
+	ft = 42;
 	len = 0;
 	mylen = 0;
-	len = printf("%o%s knows his %s%03c", ft, "Torrey", "stuff", '\n');
+	len = printf("%ls%s knows his %s%c", str, "Torrey", "stuff", '\n');
 	mylen = ft_printf("%o%s knows his %s%c", ft, "Torrey", "stuff", '\n');
 	printf("len = %i\nmylen = %i\n", len, mylen);
 	return(0);
