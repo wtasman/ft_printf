@@ -15,21 +15,20 @@ CFLAGS = -Wall -Wextra -Werror
 NAME = libftprintf.a
 BLDLIB = ar rc
 SORT = ranlib
-LIBS = libft.a
 
 SOURCES =	ft_printf.c\
+			ft_isdigit.c\
 			ft_itoa_base.c\
-			ft_strlen.c\
-			ft_putstr.c\
 			ft_putchar.c\
-			ft_isdigit.c
+			ft_putstr.c\
+			ft_strlen.c
 
 OBJ =	$(SOURCES:.c=.o)
 
 .PHONY: all norm clean fclean re
 
-$(NAME):
-	$(CC) -c $(CFLAGS) $(SOURCES)
+$(NAME): $(LIBS) $(OBJ)
+	$(CC) -c $(CFLAGS) $(SOURCES) $(LIB)
 	$(BLDLIB) $(NAME) $(OBJ)
 	$(SORT) $(NAME)
 
