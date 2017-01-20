@@ -363,8 +363,8 @@ int	print_final_format(va_list a_list, const char *format)
 				store_type(&ptr, &len, a_list, flags);
 			else 
 				return (-1);
+					ptr++;
 		}
-		ptr++;
 		ft_init_flags();
 	}
 	free(flags);
@@ -385,7 +385,7 @@ int ft_printf(const char *format, ...)
 	}
 	return (len);
 }
-
+/*
 #include <locale.h>
 
 int	main(void)
@@ -403,4 +403,4 @@ int	main(void)
 	mylen = ft_printf("%o%s knows his %s%c", ft, "Torrey", "stuff", '\n');
 	printf("len = %i\nmylen = %i\n", len, mylen);
 	return(0);
-}
+}*/
