@@ -16,6 +16,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
+# include <wchar.h>
 
 typedef struct s_list
 {
@@ -39,5 +40,6 @@ size_t		ft_strlen(const char *);
 void		ft_putstr(const char *);
 void		ft_putchar(char c);
 int			ft_isdigit(int c);
+void		ft_putwchar(wint_t c);
 
 #endif
