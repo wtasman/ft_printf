@@ -42,4 +42,5 @@ void		ft_putchar(char c);
 int			ft_isdigit(int c);
 void		ft_putwchar(int c);
 void		ft_putwstr(int *str);
+
 #endif
