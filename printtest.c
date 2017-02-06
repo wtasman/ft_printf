@@ -33,7 +33,7 @@ int main(void)
 	//printf("%s\n", bi);
 	//len = printf("%S\n", wcharstr);
 	//mylen = ft_printf("%S\n", wcharstr);
-	printf("len = %i\nmylen = %i\n", len, mylen);
+	//printf("len = %i\nmylen = %i\n", len, mylen);
 
 	return (0);
 }

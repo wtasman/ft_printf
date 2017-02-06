@@ -55,21 +55,6 @@ int	is_cap(char **ptr)
 	return((**ptr >= 'A' && **ptr <= 'Z'));
 }
 
-int	number_spec(va_list a_list, int  base)
-{
-	int		len;
-	char	*str;
-
-	len = 0;
-	str = ft_itoa_base(va_arg(a_list, int), base);
-	while (str[len])
-	{
-		write(1, &str[len], 1);
-		len++;
-	}
-	return (len);
-}
-
 int	s_spec(va_list a_list, char **ptr)
 {
 	int len;
@@ -236,7 +221,7 @@ int x_spec(va_list a_list, char **ptr, f_list *flags)
 	len = 0;
 	i = 0;
 	if (**ptr && is_cap(ptr))
-		str = ft_itoa_base(va_arg(a_list, long int), 16);
+		str = ft_itoa_base(va_arg(a_list, long long int), 16);
 	else 
 		str = ft_itoa_base(va_arg(a_list, int), 16);
 	if (flags && flags->space && !flags->plus)
@@ -246,7 +231,10 @@ int x_spec(va_list a_list, char **ptr, f_list *flags)
 	}
 	if (flags && flags->hash)
 	{
-		write(1, "0x", 2);
+		if (is_cap(ptr))
+			write(1, "0X", 2);
+		else
+			write(1, "0x", 2);
 		len += 2;
 	}
 	while (str[i])
@@ -315,14 +303,14 @@ void	length_check(char **ptr, l_list *length)
 {
 	if (*ptr && **ptr == 'h')
 	{
-		if (**ptr++ == 'h')
+		if (*ptr && *(*ptr + 1) == 'h')
 			length->hh = 1;
 		else
 			length->h = 1;
 	}
 	else if (*ptr && **ptr == 'l')
 	{
-		if (**ptr++ == 'l')
+		if (*ptr && *(*ptr + 1) == 'l')
 			length->ll = 1;
 		else
 			length->l = 1;
