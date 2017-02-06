@@ -23,13 +23,21 @@ f_list	*ft_init_flags(void)
 	flags->dash = 0;
 	flags->plus = 0;
 	flags->space = 0;
-	flags->hh = 0;
-	flags->h = 0;
-	flags->l = 0;
-	flags->ll = 0;
-	flags->j = 0;
-	flags->z = 0;
 	return (flags);
+}
+
+l_list	*ft_init_lmods(void)
+{
+	l_list *lmods;
+
+	lmods = (l_list *)malloc(sizeof(l_list));
+	lmods->hh = 0;
+	lmods->h = 0;
+	lmods->l = 0;
+	lmods->ll = 0;
+	lmods->j = 0;
+	lmods->z = 0;
+	return (lmods);
 }
 
 int	double_percent(void)
@@ -69,13 +77,13 @@ int	s_spec(va_list a_list, char **ptr)
 
 	len = 0;
 
-	if (**ptr && is_cap(ptr) == 0)
+	if (**ptr && !is_cap(ptr))
 		str = va_arg(a_list, void *);
 	else 
 		str = va_arg(a_list, void *);
-	if (**ptr && is_cap(ptr) == 1)
+	if (**ptr && is_cap(ptr))
 	{
-		printf("fun\n");
+		len += ft_putwstr((int *)str);
 	}
 	while (str[len])
 	{
@@ -92,7 +100,12 @@ int	c_spec(va_list a_list, char **ptr)
 
 	len = 0;
 	if (*ptr && is_cap(ptr) == 1)
+	{
 		c = va_arg(a_list, long int);
+		putwchar(c);
+		len++;
+		return (len);
+	}
 	else
 		c = va_arg(a_list, int);
 	write(1, &c, 1);
@@ -249,7 +262,7 @@ int	is_spec(int c)
 {
 	return (c == 's' || c == 'S' || c == 'p' || c == 'd' || c == 'D' ||
 			c == 'i' || c == 'o' || c == 'O' || c == 'u' || c == 'U' ||
-		   	c == 'x' || c == 'X' || c == 'c' || c == 'C');
+		   	c == 'x' || c == 'X' || c == 'c' || c == 'C' || c == '%');
 }
 
 int is_flag(int c)
@@ -298,6 +311,28 @@ void	flag_check(char **ptr, f_list *flags)
 		flags->space = 1;
 }
 
+void	length_check(char **ptr, l_list *length)
+{
+	if (*ptr && **ptr == 'h')
+	{
+		if (**ptr++ == 'h')
+			length->hh = 1;
+		else
+			length->h = 1;
+	}
+	else if (*ptr && **ptr == 'l')
+	{
+		if (**ptr++ == 'l')
+			length->ll = 1;
+		else
+			length->l = 1;
+	}
+	else if (*ptr && **ptr == 'j')
+		length->j = 1;
+	else if (*ptr && **ptr == 'z')
+		length->z = 1;
+}
+
 /*int		length_check(char **ptr, f_list flags)
 {
 	else if (*ptr && **ptr == 'h')
@@ -332,20 +367,16 @@ void	flag_check(char **ptr, f_list *flags)
 int	print_final_format(va_list a_list, const char *format)
 {
 	int	len;
-	f_list *flags;
+	f_list	*flags;
+	l_list	*lmods;
 	char	*ptr;
 
 	len = 0;
 	flags = ft_init_flags();
+	lmods = ft_init_lmods();
 	ptr = (char *)format;
 	while (*ptr)
 	{
-		while (*ptr && *ptr != '%')
-		{
-			write(1, ptr, 1);
-			len++;
-			ptr++;
-		}
 		if (*ptr && *ptr == '%')
 		{
 			ptr++;
@@ -353,21 +384,32 @@ int	print_final_format(va_list a_list, const char *format)
 			{
 				if (!is_flag(*ptr) && !is_length(*ptr))
 					return (-1);
-				while (!is_spec(*ptr) && is_flag(*ptr))
+				else if(!is_spec(*ptr) && is_flag(*ptr))
 				{
 					flag_check(&ptr, flags);
 					ptr++;
 				}
+				else if (!is_spec(*ptr) && is_length(*ptr))
+				{
+					length_check(&ptr, lmods);
+					ptr++;
+				}
+				else 
+					return (-1);
 			}
 			if (*ptr && is_spec(*ptr))
 				store_type(&ptr, &len, a_list, flags);
-			else 
-				return (-1);
-					ptr++;
+		}
+		else if (*ptr && *ptr != '%')
+		{
+			write(1, ptr, 1);
+			len++;
 		}
 		ft_init_flags();
+		ptr++;
 	}
 	free(flags);
+	free(lmods);
 	return (len);
 }
 
@@ -385,6 +427,7 @@ int ft_printf(const char *format, ...)
 	}
 	return (len);
 }
+
 /*
 #include <locale.h>
 

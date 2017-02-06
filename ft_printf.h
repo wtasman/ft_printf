@@ -18,7 +18,7 @@
 # include <stdarg.h>
 # include <wchar.h>
 
-typedef struct s_list
+typedef struct f_list
 {
 	int width;
 	int	hash;
@@ -26,13 +26,17 @@ typedef struct s_list
 	int	dash;
 	int	plus;
 	int space;
+}	f_list;
+
+typedef struct l_list
+{
 	int	hh;
 	int h;
 	int l;
 	int ll;
 	int j;
 	int z;
-}	f_list;
+}	l_list;
 
 int			ft_printf(const char *format, ...);
 char		*ft_itoa_base(int value, int base);
@@ -41,6 +45,13 @@ void		ft_putstr(const char *);
 void		ft_putchar(char c);
 int			ft_isdigit(int c);
 void		ft_putwchar(int c);
-void		ft_putwstr(int *str);
+int		ft_putwstr(int *str);
 
 #endif
+
+	int	hh;
+	int h;
+	int l;
+	int ll;
+	int j;
+	int z;

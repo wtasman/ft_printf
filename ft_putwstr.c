@@ -1,6 +1,6 @@
 # include "ft_printf.h"
 
-void	ft_putwstr(int *str)
+int	ft_putwstr(int *str)
 {	
 	int i;
 
@@ -10,4 +10,5 @@ void	ft_putwstr(int *str)
 		ft_putwchar(str[i]);
 		i++;
 	}
+	return (i);
 }

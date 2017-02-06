@@ -9,9 +9,10 @@ int main(void)
 	int mylen;
 	int	hex;
 	char	*bi;
+	int	wcharstr[] = {0x1F635, '\0'};
 
 	len = 0;
-	mylen =0;
+	mylen = 0;
 	hex = 0x4e3e;
 	len = printf("Can you say WTF\n");
 	mylen = ft_printf("Can you say WTF\n");
@@ -25,11 +26,14 @@ int main(void)
 	len = printf("\n");
 	mylen = ft_printf("\n");
 	printf("len = %i\nmylen = %i\n", len, mylen);
-	len = printf("%s\n", "practice");
-	mylen = ft_printf("%c\n", 'P');
+	len = printf("%C\n", 0x1F635);
+	mylen = ft_printf("%C\n", 0x1F635);
 	printf("len = %i\nmylen = %i\n", len, mylen);
-	bi = ft_itoa_base(hex, 2);
-	printf("%s\n", bi);
+	//bi = ft_itoa_base(hex, 2);
+	//printf("%s\n", bi);
+	//len = printf("%S\n", wcharstr);
+	//mylen = ft_printf("%S\n", wcharstr);
+	printf("len = %i\nmylen = %i\n", len, mylen);
 
 	return (0);
 }
