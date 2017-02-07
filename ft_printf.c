@@ -12,25 +12,26 @@
 #include "ft_printf.h"
 #include <stdio.h>
 
-f_list	*ft_init_flags(void)
+t_flags	*ft_init_flags(void)
 {
-	f_list *flags;
+	t_flags *flags;
 
-	flags = (f_list *)malloc(sizeof(f_list));
+	flags = (t_flags *)malloc(sizeof(t_flags));
 	flags->width = 0;
 	flags->hash = 0;
 	flags->zero = 0;
 	flags->dash = 0;
 	flags->plus = 0;
 	flags->space = 0;
+	flags->caps = 0;
 	return (flags);
 }
 
-l_list	*ft_init_lmods(void)
+t_lmods	*ft_init_lmods(void)
 {
-	l_list *lmods;
+	t_lmods *lmods;
 
-	lmods = (l_list *)malloc(sizeof(l_list));
+	lmods = (t_lmods *)malloc(sizeof(t_lmods));
 	lmods->hh = 0;
 	lmods->h = 0;
 	lmods->l = 0;
@@ -55,50 +56,48 @@ int	is_cap(char **ptr)
 	return((**ptr >= 'A' && **ptr <= 'Z'));
 }
 
-int	s_spec(va_list a_list, char **ptr)
+int	s_spec(va_list a_list, t_flags *flags, t_lmods *lmods)
 {
 	int len;
 	char	*str;
 
 	len = 0;
 
-	if (**ptr && !is_cap(ptr))
-		str = va_arg(a_list, void *);
-	else 
-		str = va_arg(a_list, void *);
-	if (**ptr && is_cap(ptr))
+	if (flags->caps || lmods->l)
 	{
+		str = va_arg(a_list, wchar_t *);
 		len += ft_putwstr((int *)str);
 	}
-	while (str[len])
+	else 
 	{
-		write(1, &str[len], 1);
-		len++;
+		str = va_arg(a_list, char *);
+		len += ft_strlen(str);
+		ft_putstr(str);
 	}
 	return (len);	
 }
 
-int	c_spec(va_list a_list, char **ptr)
+int	c_spec(va_list a_list, t_flags *flags, t_lmods *lmods)
 {
 	int len;
 	char	c;
 
 	len = 0;
-	if (*ptr && is_cap(ptr) == 1)
+	if (flags->caps || lmods->l)
 	{
-		c = va_arg(a_list, long int);
-		putwchar(c);
-		len++;
-		return (len);
+		c = va_arg(a_list, wint_t);
+		ft_putwchar(c);
 	}
 	else
+	{
 		c = va_arg(a_list, int);
-	write(1, &c, 1);
+		write(1, &c, 1);
+	}
 	len++;
 	return (len);
 }
 
-int u_spec(va_list a_list, char **ptr)
+int u_spec(va_list a_list, t_flags *flags, t_lmods *lmods)
 {
 	int len;
 	int value;
@@ -107,9 +106,20 @@ int u_spec(va_list a_list, char **ptr)
 	len = 0;
 	if (**ptr && is_cap(ptr))
 		value = va_arg(a_list, unsigned long int);
+	if (**ptr && lmods->hh)
+		str = ft_itoa_base(va_arg(a_list, unsigned char), 10);
+	else if (**ptr && lmods->h)
+		str = ft_itoa_base(va_arg(a_list, unsigned short int), 10);
+	else if (**ptr && lmods->l)
+		str = ft_itoa_base(va_arg(a_list, unsigned long int), 10);
+	else if (**ptr && lmods->ll)
+		str = ft_itoa_base(va_arg(a_list, unsigned long long int), 10);
+	else if (**ptr && lmods->j)
+		str = ft_itoa_base(va_arg(a_list, uintmax_t), 10);
+	else if (**ptr && lmods->z)
+		str = ft_itoa_base(va_arg(a_list, size_t), 10);
 	else 
-		value = va_arg(a_list, unsigned int);
-	str = ft_itoa_base(value, 10);
+		str = ft_itoa_base(va_arg(a_list, unsigned int), 10);
 	while (str[len])
 	{
 		write(1, &str[len], 1);
@@ -118,7 +128,7 @@ int u_spec(va_list a_list, char **ptr)
 	return(len);
 }
 
-int	p_spec(va_list a_list)
+int	p_spec(va_list a_list, t_flags *flags)
 {
 	int		len;
 	int		addr;
@@ -133,7 +143,7 @@ int	p_spec(va_list a_list)
 	return (len);
 }
 
-int o_spec(va_list a_list, char **ptr, f_list *flags)
+int o_spec(va_list a_list, t_flags *flags, t_lmods *lmods)
 {
 	int		len;
 	int		i;
@@ -142,16 +152,20 @@ int o_spec(va_list a_list, char **ptr, f_list *flags)
 
 	len = 0;
 	i = 0;
-	if (**ptr && is_cap(ptr) == 0)
-	{
-		temp = va_arg(a_list, int);
-		str = ft_itoa_base(temp, 8);
-	}
+	if (**ptr && lmods->hh)
+		str = ft_itoa_base(va_arg(a_list, unsigned char), 8);
+	else if (**ptr && lmods->h)
+		str = ft_itoa_base(va_arg(a_list, unsigned short int), 8);
+	else if (**ptr && lmods->l)
+		str = ft_itoa_base(va_arg(a_list, unsigned long int), 8);
+	else if (**ptr && lmods->ll)
+		str = ft_itoa_base(va_arg(a_list, unsigned long long int), 8);
+	else if (**ptr && lmods->j)
+		str = ft_itoa_base(va_arg(a_list, uintmax_t), 8);
+	else if (**ptr && lmods->z)
+		str = ft_itoa_base(va_arg(a_list, size_t), 8);
 	else 
-	{
-		temp = va_arg(a_list, long int);
-		str = ft_itoa_base(temp, 8);
-	}
+		str = ft_itoa_base(va_arg(a_list, unsigned int), 8);
 	if (flags && flags->hash)
 	{
 		write(1, "0", 1);
@@ -171,7 +185,7 @@ int o_spec(va_list a_list, char **ptr, f_list *flags)
 	return (len);
 }
 
-int d_spec(va_list a_list, char **ptr, f_list *flags)
+int d_spec(va_list a_list, t_flags *flags, t_lmods *lmods)
 {
 	int				len;
 	long long		temp;
@@ -180,16 +194,20 @@ int d_spec(va_list a_list, char **ptr, f_list *flags)
 
 	len = 0;
 	i = 0;
-	if (**ptr && is_cap(ptr) == 0)
-	{
-		temp = (int)va_arg(a_list, int);
-		str = ft_itoa_base(temp, 10);
-	}
+	if (**ptr && lmods->hh)
+		str = ft_itoa_base(va_arg(a_list, signed char), 10);
+	else if (**ptr && lmods->h)
+		str = ft_itoa_base(va_arg(a_list, short int), 10);
+	else if (**ptr && lmods->l)
+		str = ft_itoa_base(va_arg(a_list, long int), 10);
+	else if (**ptr && lmods->ll)
+		str = ft_itoa_base(va_arg(a_list, long long int), 10);
+	else if (**ptr && lmods->j)
+		str = ft_itoa_base(va_arg(a_list, intmax_t), 10);
+	else if (**ptr && lmods->z)
+		str = ft_itoa_base(va_arg(a_list, size_t), 10);
 	else 
-	{
-		temp = (long int)va_arg(a_list, long int);
-		str = ft_itoa_base(temp, 10);
-	}
+		str = ft_itoa_base(va_arg(a_list, int), 10);
 	if (temp > 0)
 	{
 		if (flags && flags->space && !flags->plus)
@@ -212,7 +230,7 @@ int d_spec(va_list a_list, char **ptr, f_list *flags)
 	return (len);
 }
 
-int x_spec(va_list a_list, char **ptr, f_list *flags)
+int x_spec(va_list a_list, t_flags *flags, t_lmods *lmods)
 {
 	int		len;
 	int		i;
@@ -220,10 +238,20 @@ int x_spec(va_list a_list, char **ptr, f_list *flags)
 
 	len = 0;
 	i = 0;
-	if (**ptr && is_cap(ptr))
-		str = ft_itoa_base(va_arg(a_list, long long int), 16);
+	if (**ptr && lmods->hh)
+		str = ft_itoa_base(va_arg(a_list, unsigned char), 16);
+	else if (**ptr && lmods->h)
+		str = ft_itoa_base(va_arg(a_list, unsigned short int), 16);
+	else if (**ptr && lmods->l)
+		str = ft_itoa_base(va_arg(a_list, unsigned long int), 16);
+	else if (**ptr && lmods->ll)
+		str = ft_itoa_base(va_arg(a_list, unsigned long long int), 16);
+	else if (**ptr && lmods->j)
+		str = ft_itoa_base(va_arg(a_list, uintmax_t), 16);
+	else if (**ptr && lmods->z)
+		str = ft_itoa_base(va_arg(a_list, size_t), 16);
 	else 
-		str = ft_itoa_base(va_arg(a_list, int), 16);
+		str = ft_itoa_base(va_arg(a_list, unsigned int), 16);
 	if (flags && flags->space && !flags->plus)
 	{
 		write(1, " ", 1);
@@ -263,27 +291,27 @@ int is_length(int c)
 	return (c == 'h' || c == 'l' || c == 'j' || c == 'z');
 }
 
-void	store_type(char **ptr, int *len, va_list a_list, f_list *flags)
+void	store_type(int *len, va_list a_list, t_flags *flags, t_lmods *lmods)
 {
-	if (*ptr && (**ptr == 's' || **ptr == 'S'))
-		*len += s_spec(a_list, &*ptr);
+	if (*ptr && (**ptr == 's'))
+		*len += s_spec(a_list, &*flags, &*lmods);
 	else if (*ptr && **ptr == 'p')
-		*len += p_spec(a_list);
-	else if (*ptr && (**ptr == 'd' || **ptr == 'i' || **ptr == 'D'))
-		*len += d_spec(a_list, &*ptr, &*flags);
-	else if (*ptr && (**ptr == 'o' || **ptr == 'O'))
-		*len += o_spec(a_list, &*ptr, &*flags);
-	else if (*ptr && (**ptr == 'u' || **ptr == 'U'))
-		*len += u_spec(a_list, &*ptr);
-	else if (*ptr && (**ptr == 'x' || **ptr == 'X'))
-		*len += x_spec(a_list, &*ptr, &*flags);
-	else if (*ptr && (**ptr == 'c' || **ptr == 'C'))
-		*len += c_spec(a_list, &*ptr);
+		*len += p_spec(a_list, &*flags);
+	else if (*ptr && (**ptr == 'd' || **ptr == 'i'))
+		*len += d_spec(a_list, &*flags, &*lmods);
+	else if (*ptr && (**ptr == 'o'))
+		*len += o_spec(a_list, &*flags, &*lmods);
+	else if (*ptr && (**ptr == 'u'))
+		*len += u_spec(a_list, &*flags, &*lmods);
+	else if (*ptr && (**ptr == 'x'))
+		*len += x_spec(a_list, &*flags, &*lmods);
+	else if (*ptr && (**ptr == 'c'))
+		*len += c_spec(a_list, &*flags, &*lmods);
 	else if (*ptr && **ptr == '%')
 		*len += double_percent();
 }
 
-void	flag_check(char **ptr, f_list *flags)
+void	flag_check(char **ptr, t_flags *flags)
 {
 	if (*ptr && **ptr == '#')
 		flags->hash = 1;
@@ -293,25 +321,35 @@ void	flag_check(char **ptr, f_list *flags)
 		flags->zero = 1;
 	else if (*ptr && **ptr == '-')
 		flags->dash = 1;
+	else if (*ptr && **ptr == ' ')
+	{
+		while(**ptr == ' ')
+			ptr++;
+		flags->plus = 1
+	}
 	else if (*ptr && **ptr == '+')
 		flags->plus = 1;
-	else if (*ptr && **ptr == ' ')
-		flags->space = 1;
 }
 
-void	length_check(char **ptr, l_list *length)
+void	length_check(char **ptr, t_lmods *length)
 {
 	if (*ptr && **ptr == 'h')
 	{
 		if (*ptr && *(*ptr + 1) == 'h')
+		{
 			length->hh = 1;
+			**ptr++;
+		}
 		else
 			length->h = 1;
 	}
 	else if (*ptr && **ptr == 'l')
 	{
 		if (*ptr && *(*ptr + 1) == 'l')
+		{
 			length->ll = 1;
+			ptr++;
+		}
 		else
 			length->l = 1;
 	}
@@ -321,42 +359,11 @@ void	length_check(char **ptr, l_list *length)
 		length->z = 1;
 }
 
-/*int		length_check(char **ptr, f_list flags)
-{
-	else if (*ptr && **ptr == 'h')
-	{
-		if (*ptr && ((**ptr + 1) == 'h'))
-		{		
-			flags->hh = 1;
-			ptr++;
-		}
-		else
-			flags->h = 1;
-	}
-	else if (*ptr && **ptr == 'l')
-	{
-		if (*ptr && ((**ptr + 1) == 'l'))
-		{
-			flags->ll = 1;
-			ptr++;
-		}
-		else
-			flags->l = 1;
-	}
-	else if (*ptr && **ptr == 'j')
-		flags->j = 1;
-	else if (*ptr && **ptr == 'z')
-		flags->z = 1;
-	else
-		return (0);
-	return (1);
-}*/
-
 int	print_final_format(va_list a_list, const char *format)
 {
 	int	len;
-	f_list	*flags;
-	l_list	*lmods;
+	t_flags	*flags;
+	t_lmods	*lmods;
 	char	*ptr;
 
 	len = 0;
@@ -370,23 +377,30 @@ int	print_final_format(va_list a_list, const char *format)
 			ptr++;
 			while (*ptr && !is_spec(*ptr))
 			{
-				if (!is_flag(*ptr) && !is_length(*ptr))
-					return (-1);
-				else if(!is_spec(*ptr) && is_flag(*ptr))
+				else if(is_flag(*ptr) && !is_digit(*ptr) && !is_length(*ptr))
 				{
 					flag_check(&ptr, flags);
 					ptr++;
 				}
-				else if (!is_spec(*ptr) && is_length(*ptr))
+				else if(!is_flag(*ptr) && is_digit(*ptr) && !is_length(*ptr))
+				{
+					parse_minfw(&ptr, flags);
+					ptr++;
+				}
+				else if (!is_flag(*ptr) && !is_digit(*ptr) && is_length(*ptr))
 				{
 					length_check(&ptr, lmods);
 					ptr++;
 				}
-				else 
+				else if (!is_digit(*ptr) && !is_flag(*ptr) && !is_length(*ptr))
 					return (-1);
 			}
 			if (*ptr && is_spec(*ptr))
-				store_type(&ptr, &len, a_list, flags);
+			{
+				if (is_cap(*ptr))
+					flags->caps = 1;
+				store_type(&len, a_list, flags, lmods);
+			}
 		}
 		else if (*ptr && *ptr != '%')
 		{

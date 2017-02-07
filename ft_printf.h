@@ -18,7 +18,7 @@
 # include <stdarg.h>
 # include <wchar.h>
 
-typedef struct f_list
+typedef struct s_flags
 {
 	int width;
 	int	hash;
@@ -26,9 +26,10 @@ typedef struct f_list
 	int	dash;
 	int	plus;
 	int space;
-}	f_list;
+	int	caps;
+}	t_flags;
 
-typedef struct l_list
+typedef struct s_lmods
 {
 	int	hh;
 	int h;
@@ -36,7 +37,7 @@ typedef struct l_list
 	int ll;
 	int j;
 	int z;
-}	l_list;
+}	t_lengths;
 
 int			ft_printf(const char *format, ...);
 char		*ft_itoa_base(int value, int base);
@@ -45,7 +46,7 @@ void		ft_putstr(const char *);
 void		ft_putchar(char c);
 int			ft_isdigit(int c);
 void		ft_putwchar(int c);
-int		ft_putwstr(int *str);
+int			ft_putwstr(int *str);
 
 #endif
 
