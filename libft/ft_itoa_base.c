@@ -1,11 +1,11 @@
 #include <stdlib.h>
 
-char	*ft_itoa_base(int value, int base)
+char	*ft_itoa_base(unsigned long long value, int base)
 {
 	char	tab[17] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 	char		*str;
 	int			len;
-	int			v;
+	unsigned long long int	v;
 	int			flag;
 
 	if (base < 2 && base > 36)

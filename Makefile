@@ -14,24 +14,36 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 NAME = libftprintf.a
 BLDLIB = ar rc
+LIBFT = libft
+LIB = libft/libft.a
 SORT = ranlib
+TEMP = temp.a
 
 SOURCES =	ft_printf.c\
-			ft_isdigit.c\
 			ft_itoa_base.c\
-			ft_putchar.c\
-			ft_putstr.c\
-			ft_strlen.c\
 			ft_putwchar.c\
-			ft_putwstr.c
+			ft_putwstr.c\
+			c_spec.c\
+			checks.c\
+			d_spec.c\
+			ft_itoa_base.c\
+			ft_printf.c\
+			inits.c\
+			is_checks.c\
+			o_spec.c\
+			p_spec.c\
+			s_spec.c\
+			u_spec.c\
+			x_spec.c\
 
 OBJ =	$(SOURCES:.c=.o)
 
 .PHONY: all norm clean fclean re
 
 $(NAME): $(LIBS) $(OBJ)
-	$(CC) -c $(CFLAGS) $(SOURCES) $(LIB)
-	$(BLDLIB) $(NAME) $(OBJ)
+	$(CC) -c $(CFLAGS) $(SOURCES)
+	$(MAKE) -C $(LIBFT)
+	$(BLDLIB) $(NAME) $(OBJ) $(LIBFT)/$(OBJ)
 	$(SORT) $(NAME)
 
 all: $(NAME)
